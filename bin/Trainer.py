@@ -96,10 +96,26 @@ class Trainer(object):
       print('Creating team Agent2d (base)')
       team_name = 'base_' + ('left' if play_offense else 'right')
       team_dir = os.path.join(teams_dir, 'base')
-      lib_dir = None
+      lib_dir = os.path.join(teams_dir, 'base', 'lib')
       return Teams.Agent2d(team_name, team_dir, lib_dir,
                            binaryName='sample_player', logDir=self._logDir,
                            record=self._record, host='localhost',
+                           port=self._serverPort)
+    elif requested_team_name == 'cyrus':
+      print('Creating team Cyrus')
+      team_name = 'CYRUS_' + ('left' if play_offense else 'right')
+      team_dir = os.path.join(teams_dir, 'cyrus')
+      lib_dir = os.path.join(teams_dir, 'cyrus', 'lib')
+      return Teams.Cyrus(team_name, team_dir, lib_dir,
+                           binaryName='sample_player', host='localhost',
+                           port=self._serverPort)
+    elif requested_team_name == 'gliders':
+      print('Creating team Gliders2d')
+      team_name = 'Gliders_' + ('left' if play_offense else 'right')
+      team_dir = os.path.join(teams_dir, 'gliders')
+      lib_dir = None
+      return Teams.Gliders(team_name, team_dir, lib_dir,
+                           binaryName='sample_player', host='localhost',
                            port=self._serverPort)
     else:
       print('Unknown team requested: ' + requested_team_name)

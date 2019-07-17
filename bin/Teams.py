@@ -49,6 +49,8 @@ class Team(object):
     env = dict(os.environ)
     if self._lib_dir != None:
       env['LD_LIBRARY_PATH'] = self._lib_dir
+    import time
+    time.sleep(0.01)
     p = subprocess.Popen(player_cmd.split(' '), env=env, shell = False, **kwargs)
     return p
 
@@ -94,6 +96,47 @@ class Helios(Team):
     defenseOrder =  [2,3,4,5,6,7,8,11,9,10]
     super(Helios, self).__init__(name, binaryPath, libDir, options,
                                  offenseOrder, defenseOrder)
+
+  def launch_npc(self, player_num):
+    launchOpts = None
+    if player_num == 1:
+      launchOpts = '-g'
+    print('Launch npc %s-%d' % (self._name, player_num))
+    return self.start_npc_proc(launchOpts)
+
+
+class Cyrus(Team):
+  def __init__(self, name, baseDir, libDir, binaryName,
+               host='localhost', port=6000):
+    binaryPath = os.path.join(baseDir, binaryName)
+    options = '-t %s -p %i --config_dir %s/config/formations-dt '\
+              '--player-config %s/config/player.conf'\
+              % (name, port, baseDir, baseDir)
+    offenseOrder =  [11,7,8,9,10,6,3,2,4,5]
+    defenseOrder =  [2,3,4,5,6,7,8,11,9,10]
+    super(Cyrus, self).__init__(name, binaryPath, libDir, options,
+                                  offenseOrder, defenseOrder)
+
+  def launch_npc(self, player_num):
+    launchOpts = None
+    if player_num == 1:
+      launchOpts = '-g'
+    print('Launch npc %s-%d' % (self._name, player_num))
+    return self.start_npc_proc(launchOpts)
+
+
+class Gliders(Team):
+  def __init__(self, name, baseDir, libDir, binaryName,
+               host='localhost', port=6000):
+    binaryPath = os.path.join(baseDir, binaryName)
+    options = '-t %s -p %i --config_dir %s/config/formations-dt '\
+              '--player-config %s/config/player.conf'\
+              % (name, port, baseDir, baseDir)
+    self.options = options
+    offenseOrder =  [11,7,8,9,10,6,3,2,4,5]
+    defenseOrder =  [2,3,4,5,6,7,8,11,9,10]
+    super(Gliders, self).__init__(name, binaryPath, libDir, options,
+                                  offenseOrder, defenseOrder)
 
   def launch_npc(self, player_num):
     launchOpts = None

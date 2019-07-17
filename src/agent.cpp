@@ -43,6 +43,10 @@
 #include "actgen_shoot.h"
 #include "actgen_action_chain_length_filter.h"
 
+#include "body_force_shoot.h"
+
+#include "neck_offensive_intercept_neck.h"
+
 #include <rcsc/action/basic_actions.h>
 #include <rcsc/action/bhv_emergency.h>
 #include <rcsc/action/body_go_to_point.h>
@@ -311,7 +315,7 @@ void Agent::actionImpl() {
       last_action_status = this->doMove();
       break;
     case SHOOT:
-      last_action_status = this->doSmartKick();
+      last_action_status = Body_ForceShoot().execute(this);
       break;
     case PASS:
       last_action_status = this->doPassTo(int(params[0]));
@@ -692,10 +696,10 @@ Agent::doPreprocess()
     //
     // check shoot chance
     //
-    if ( doShoot() )
-    {
-        return true;
-    }
+    // if ( doShoot() )
+    // {
+    //     return true;
+    // }
 
     //
     // check queued action
@@ -1125,7 +1129,9 @@ bool Agent::doGoToBall() {
   if (! ball.posValid()) {
     return false;
   }
-  return Body_GoToPoint(ball.pos(), 0.25, ServerParam::i().maxDashPower()).execute(this);
+  bool success = Body_Intercept().execute( this );
+  this->setNeckAction( new Neck_OffensiveInterceptNeck() );
+  return success;
 }
 
 /*-------------------------------------------------------------------*/
